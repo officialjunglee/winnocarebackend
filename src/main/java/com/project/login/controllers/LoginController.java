@@ -50,7 +50,7 @@ public class LoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
       loginResponse.setResponseCode("SUCCESS");
       loginResponse.setMessage(request.getUserName());
-      System.out.println("login api"+ request);
+      System.out.println("login api:"+ request);
       return loginResponse;
     }
 @PostMapping(value = "/user/register",produces = "application/json", consumes = "application/json")
