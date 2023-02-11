@@ -63,7 +63,14 @@ public class LoginController {
 
     // create user object
     User user = new User();
+    
     user.setUsername(registerRequest.getUsername());
+    user.setFirstname(registerRequest.getFirstname());
+    user.setLastname(registerRequest.getLastname());
+    user.setAge(registerRequest.getAge());
+    user.setEmail(registerRequest.getEmail());
+    user.setEmergencycontact1(registerRequest.getEmergencycontact1());
+    user.setEmergencycontact2(registerRequest.getEmergencycontact2());
     user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
     System.out.println("username : "+registerRequest.getUsername()+" Password: "+registerRequest.getPassword());
     Role roles = roleRepository.findByRoleName("ROLE_ADMIN").get();

@@ -12,10 +12,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String username;
-
+    private String firstname;
+    private String lastname;
+    private String email;
+    private int age;
+    private int emergencycontact1;
+    private int emergencycontact2;
     @Column(length = 70)
     private String password;
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
