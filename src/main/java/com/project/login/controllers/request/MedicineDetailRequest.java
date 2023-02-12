@@ -11,9 +11,9 @@ public class MedicineDetailRequest {
 
              String Prescription_name;
             int stock;
-             Date expirydate;
-             Date medstartdate;
-             Date medenddate;
-             Time remindertime;
+             String expirydate;
+             String medstartdate;
+             String medenddate;
+             String remindertime;
              String username;
 }

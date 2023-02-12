@@ -1,22 +1,25 @@
 package com.project.login.controllers;
 
+import com.project.login.repository.MedicineDetailsRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.login.controllers.model.MedicineDetails;
 import com.project.login.controllers.request.MedicineDetailRequest;
-import com.project.login.repository.MedicineDetailsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.Collections;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class MedicineTrackerController {
+    @Autowired
+    private MedicineDetailsRepository medicineDetailsRepository;
+
 
 @PostMapping(value = "/user/medicinedetails",produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> registerResponse(@RequestBody MedicineDetailRequest medRequest){
@@ -35,7 +38,7 @@ public class MedicineTrackerController {
     medRequest.setUsername(medRequest.getUsername());
     
 
-    MedicineDetailsRepository.save(meddetails);
+    medicineDetailsRepository.save(meddetails);
 
     return new ResponseEntity<>("User Medication details saved successfully", HttpStatus.OK);
     }

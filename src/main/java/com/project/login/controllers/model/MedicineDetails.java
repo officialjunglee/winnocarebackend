@@ -11,13 +11,15 @@ import java.util.Date;
 @Entity
 @Table(name = "medicine_details", uniqueConstraints = {@UniqueConstraint(columnNames = "PrescriptionID")})
 public class MedicineDetails {
-            private int prescriptionID;
+            @Id
+            @GeneratedValue(strategy = GenerationType.IDENTITY)
+            private long prescriptionID;
             private String Prescription_name;
             private int stock;
-            private Date expirydate;
-            private Date medstartdate;
-            private Date medenddate;
-            private Time remindertime;
+            private String expirydate;
+            private String medstartdate;
+            private String medenddate;
+            private String remindertime;
             private String username;
     
 }
