@@ -37,6 +37,11 @@ public class LoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @GetMapping("/message")
+    public String test(){
+        return "Spring boot";
+    }
+
     @PostMapping(value="/user/login",produces = "application/json",consumes = "application/json")
     public LoginResponse loginv1(@RequestBody LoginRequest request){
       log.info("login api");
