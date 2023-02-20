@@ -99,6 +99,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>winnocare-backend-image</finalName>
 	</build>
 
 </project>

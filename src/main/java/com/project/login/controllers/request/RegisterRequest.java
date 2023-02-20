@@ -10,10 +10,8 @@ public class RegisterRequest {
     String email;
     int age;
     String username;
-//    String firstName;
-//
-//    String lastName;
-
+    String phoneNumber;
+    String country;
     String password;
     int emergencycontact1;
     int emergencycontact2;
