@@ -30,24 +30,30 @@ jobs:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
 
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+      - name: Build and push Docker Image
+        uses: actions/upload-artifact@v2
         with:
           name: java-app
+          path: '${{ github.workspace }}/target/*.jar'
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'winno-care'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F41433FD2A644C34837B2BD6B1A79F07 }}
-          package: '*.jar'
+#  deploy:
+#    runs-on: windows-latest
+#    needs: build
+#    environment:
+#      name: 'Production'
+#      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+#
+#    steps:
+#      - name: Download artifact from build job
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: java-app
+#
+#      - name: Deploy to Azure Web App
+#        id: deploy-to-webapp
+#        uses: azure/webapps-deploy@v2
+#        with:
+#          app-name: 'winno-care'
+#          slot-name: 'Production'
+#          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F41433FD2A644C34837B2BD6B1A79F07 }}
+#          package: '*.jar'
