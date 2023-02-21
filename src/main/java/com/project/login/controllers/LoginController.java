@@ -7,6 +7,7 @@ import com.project.login.controllers.request.RegisterRequest;
 import com.project.login.controllers.response.LoginResponse;
 import com.project.login.repository.RoleRepository;
 import com.project.login.repository.UserRepository;
+import com.project.login.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,8 @@ public class LoginController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private UserService userService;
     @GetMapping("/message")
     public String test(){
         return "Spring boot";
@@ -81,4 +83,17 @@ public class LoginController {
 
     return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
     }
+    //end points for forgotpassword
+    @PostMapping(value = "/user/forgotpassword",produces = "application/json", consumes = "application/json")
+    public ResponseEntity<String> handleForgotPassword(@RequestParam("username") String username,@RequestParam("newPassword") String newpassword) {
+        
+            if (userRepository.existsByusername(username)) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+       // User user = userRepository.findByUsername(username);
+            
+       userService.updateUserPassword(username,newpassword);
+
+        return ResponseEntity.ok("Password reset done successfully");
+}
 }
