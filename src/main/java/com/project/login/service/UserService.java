@@ -12,7 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.Set;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,6 +24,9 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -39,5 +45,11 @@ public class UserService implements UserDetailsService {
                 .stream()
                 .map((role) -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
         return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),authorities);
+    }
+    //service for update password
+    public  void updateUserPassword(String username, String password)throws UsernameNotFoundException {
+        User user=userRepository.findByUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 }
