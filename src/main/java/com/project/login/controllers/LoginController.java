@@ -48,30 +48,32 @@ public class LoginController {
       LoginResponse loginResponse=new LoginResponse();
       Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName()
       ,request.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
       loginResponse.setResponseCode("SUCCESS");
-      loginResponse.setMessage(request.getUserName());
+      loginResponse.setMessage(request.getUserName()+" Authenticate Successfully");
       System.out.println("login api:"+ request);
       return loginResponse;
     }
 @PostMapping(value = "/user/register",produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> registerResponse(@RequestBody RegisterRequest registerRequest){
         log.info("Register api");
-    // add check for username exists in a DB
+    // add check if username exists in Database
     if(userRepository.existsByusername(registerRequest.getUsername())){
         return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
     }
 
-    // create user object
+    // create object of the user
     User user = new User();
     
     user.setUsername(registerRequest.getUsername());
-    user.setFirstname(registerRequest.getFirstname());
-    user.setLastname(registerRequest.getLastname());
+    user.setFirstname(registerRequest.getFirstName());
+    user.setLastname(registerRequest.getLastName());
     user.setAge(registerRequest.getAge());
+    user.setGender(registerRequest.getGender());
+    user.setCountry(registerRequest.getCountry());
     user.setEmail(registerRequest.getEmail());
-    user.setEmergencycontact1(registerRequest.getEmergencycontact1());
-    user.setEmergencycontact2(registerRequest.getEmergencycontact2());
+    user.setPhoneNumber(registerRequest.getPhoneNumber());
     user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
     System.out.println("username : "+registerRequest.getUsername()+" Password: "+registerRequest.getPassword());
     Role roles = roleRepository.findByRoleName("ROLE_ADMIN").get();

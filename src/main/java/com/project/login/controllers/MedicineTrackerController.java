@@ -29,13 +29,13 @@ public class MedicineTrackerController {
 
     // create user object
     MedicineDetails meddetails = new MedicineDetails();
-    meddetails.setPrescription_name(medRequest.getPrescription_name());
-    meddetails.setExpirydate(medRequest.getExpirydate());
+    meddetails.setPrescription_name(medRequest.getMedicineName());
+    meddetails.setExpirydate(medRequest.getExpiryDate());
     meddetails.setStock(medRequest.getStock());
-    meddetails.setMedenddate(medRequest.getMedenddate());
-    meddetails.setMedstartdate(medRequest.getMedstartdate());
-    meddetails.setRemindertime(medRequest.getRemindertime());
-    medRequest.setUsername(medRequest.getUsername());
+    meddetails.setMedenddate(medRequest.getMedEndDate());
+    meddetails.setMedstartdate(medRequest.getMedStartDate());
+    meddetails.setRemindertime(medRequest.getReminderTime());
+    medRequest.setUserName(medRequest.getUserName());
     
 
     medicineDetailsRepository.save(meddetails);

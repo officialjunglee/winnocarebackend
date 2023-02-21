@@ -9,11 +9,11 @@ import java.time.*;
 @Data
 public class MedicineDetailRequest {
 
-             String Prescription_name;
+             String medicineName;
             int stock;
-             String expirydate;
-             String medstartdate;
-             String medenddate;
-             String remindertime;
-             String username;
+             String expiryDate;
+             String medStartDate;
+             String medEndDate;
+             String reminderTime;
+             String userName;
 }

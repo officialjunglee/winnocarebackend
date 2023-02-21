@@ -11,13 +11,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String username;
-    private String firstname;
-    private String lastname;
-    private String email;
-    private int age;
-    private int emergencycontact1;
-    private int emergencycontact2;
+    String firstname;
+    String lastname;
+    String email;
+    int age;
+    String gender;
+    String username;
+    String phoneNumber;
+    String country;
     @Column(length = 70)
     private String password;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
