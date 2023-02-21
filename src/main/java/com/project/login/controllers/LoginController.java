@@ -8,6 +8,7 @@ import com.project.login.controllers.response.LoginResponse;
 import com.project.login.repository.RoleRepository;
 import com.project.login.repository.UserRepository;
 import com.project.login.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collections;
 
 @Slf4j
@@ -45,16 +48,24 @@ public class LoginController {
     }
 
     @PostMapping(value="/user/login",produces = "application/json",consumes = "application/json")
-    public LoginResponse loginv1(@RequestBody LoginRequest request){
+    public LoginResponse loginv1(@RequestBody LoginRequest request, HttpServletResponse httpServletResponse) throws IOException {
       log.info("login api");
       LoginResponse loginResponse=new LoginResponse();
-      Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName()
-      ,request.getPassword()));
-
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-      loginResponse.setResponseCode("SUCCESS");
-      loginResponse.setMessage(request.getUserName()+" Authenticate Successfully");
-      System.out.println("login api:"+ request);
+      try{
+          Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName()
+                  ,request.getPassword()));
+          if(authentication.isAuthenticated()){
+              SecurityContextHolder.getContext().setAuthentication(authentication);
+              loginResponse.setResponseCode("SUCCESS");
+              loginResponse.setMessage(request.getUserName()+" Authenticate Successfully");
+              System.out.println("login api:"+ request);
+          }
+      }
+      catch (AuthenticationException exception){
+          loginResponse.setResponseCode("FAILURE");
+          loginResponse.setMessage(request.getUserName()+" Authentication Failed");
+          httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+      }
       return loginResponse;
     }
 @PostMapping(value = "/user/register",produces = "application/json", consumes = "application/json")
@@ -87,14 +98,14 @@ public class LoginController {
     }
     //end points for forgotpassword
     @PostMapping(value = "/user/forgotpassword",produces = "application/json", consumes = "application/json")
-    public ResponseEntity<String> handleForgotPassword(@RequestParam("username") String username,@RequestParam("newPassword") String newpassword) {
+    public ResponseEntity<String> handleForgotPassword(@RequestParam("userName") String userName,@RequestParam("newPassword") String newpassword) {
         
-            if (userRepository.existsByusername(username)) {
+            if (userRepository.existsByusername(userName)) {
             return ResponseEntity.badRequest().body("User not found");
         }
        // User user = userRepository.findByUsername(username);
             
-       userService.updateUserPassword(username,newpassword);
+       userService.updateUserPassword(userName,newpassword);
 
         return ResponseEntity.ok("Password reset done successfully");
 }

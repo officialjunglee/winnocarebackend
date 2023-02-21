@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 import java.util.Set;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,9 +30,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     public UserService(UserRepository userRepository){
         this.userRepository=userRepository;
     }
@@ -39,7 +38,6 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User user=userRepository.findByUsername(userName).orElseThrow(() ->
                 new UsernameNotFoundException("User not found with username or email: "+ userName));
-
         Set<GrantedAuthority> authorities = user
                 .getRoles()
                 .stream()
@@ -48,7 +46,7 @@ public class UserService implements UserDetailsService {
     }
     //service for update password
     public  void updateUserPassword(String username, String password)throws UsernameNotFoundException {
-        User user=userRepository.findByUsername(username);
+        User user=new User();
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
