@@ -19,6 +19,10 @@ public class User {
     String username;
     String phoneNumber;
     String country;
+    String emegencyContact1;
+    String emergencyContact2;
+    String doctorContact1;
+    String doctorContact2;
     @Column(length = 70)
     private String password;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

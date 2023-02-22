@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -45,8 +45,8 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),authorities);
     }
     //service for update password
-    public  void updateUserPassword(String username, String password)throws UsernameNotFoundException {
-        User user=new User();
+    public  void updateUserPassword(User user, String password)throws UsernameNotFoundException {
+
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }

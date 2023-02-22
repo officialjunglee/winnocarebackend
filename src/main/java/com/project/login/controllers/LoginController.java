@@ -8,6 +8,7 @@ import com.project.login.controllers.response.LoginResponse;
 import com.project.login.repository.RoleRepository;
 import com.project.login.repository.UserRepository;
 import com.project.login.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -63,7 +66,7 @@ public class LoginController {
       }
       catch (AuthenticationException exception){
           loginResponse.setResponseCode("FAILURE");
-          loginResponse.setMessage(request.getUserName()+" Authentication Failed");
+          loginResponse.setMessage("Authentication Failed Incorrect Username or Password");
           httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
       }
       return loginResponse;
@@ -88,6 +91,10 @@ public class LoginController {
     user.setEmail(registerRequest.getEmail());
     user.setPhoneNumber(registerRequest.getPhoneNumber());
     user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+    user.setEmegencyContact1(registerRequest.getEmegencyContact1());
+    user.setEmergencyContact2(registerRequest.getEmergencyContact2());
+    user.setDoctorContact1(registerRequest.getDoctorContact1());
+    user.setDoctorContact2(registerRequest.getDoctorContact2());
     System.out.println("username : "+registerRequest.getUsername()+" Password: "+registerRequest.getPassword());
     Role roles = roleRepository.findByRoleName("ROLE_ADMIN").get();
     user.setRoles(Collections.singleton(roles));
@@ -98,15 +105,14 @@ public class LoginController {
     }
     //end points for forgotpassword
     @PostMapping(value = "/user/forgotpassword",produces = "application/json", consumes = "application/json")
-    public ResponseEntity<String> handleForgotPassword(@RequestParam("userName") String userName,@RequestParam("newPassword") String newpassword) {
-        
-            if (userRepository.existsByusername(userName)) {
+    public ResponseEntity<?> handleForgotPassword(@RequestParam("userName") String userName,@RequestParam("newPassword") String newPassword) {
+        Optional<User> user=userRepository.findByUsername(userName);
+            if (!userRepository.existsByusername(userName)) {
             return ResponseEntity.badRequest().body("User not found");
         }
        // User user = userRepository.findByUsername(username);
-            
-       userService.updateUserPassword(userName,newpassword);
 
-        return ResponseEntity.ok("Password reset done successfully");
+       userService.updateUserPassword(user.orElseThrow(),newPassword);
+            return ResponseEntity.ok("Password reset done successfully");
 }
 }

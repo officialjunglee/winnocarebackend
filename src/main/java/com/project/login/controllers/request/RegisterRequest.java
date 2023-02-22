@@ -14,4 +14,8 @@ public class RegisterRequest {
     String phoneNumber;
     String country;
     String password;
+    String emegencyContact1;
+    String emergencyContact2;
+    String doctorContact1;
+    String doctorContact2;
 }
