@@ -36,13 +36,13 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        User user=userRepository.findByUsername(userName).orElseThrow(() ->
+        User user=userRepository.findByUserName(userName).orElseThrow(() ->
                 new UsernameNotFoundException("User not found with username or email: "+ userName));
         Set<GrantedAuthority> authorities = user
                 .getRoles()
                 .stream()
                 .map((role) -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUserName(),user.getPassword(),authorities);
     }
     //service for update password
     public  void updateUserPassword(User user, String password)throws UsernameNotFoundException {

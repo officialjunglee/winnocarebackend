@@ -75,27 +75,27 @@ public class LoginController {
     public ResponseEntity<?> registerResponse(@RequestBody RegisterRequest registerRequest){
         log.info("Register api");
     // add check if username exists in Database
-    if(userRepository.existsByusername(registerRequest.getUsername())){
+    if(userRepository.existsByuserName(registerRequest.getUserName())){
         return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
     }
 
     // create object of the user
     User user = new User();
     
-    user.setUsername(registerRequest.getUsername());
-    user.setFirstname(registerRequest.getFirstName());
-    user.setLastname(registerRequest.getLastName());
+    user.setUserName(registerRequest.getUserName());
+    user.setFirstName(registerRequest.getFirstName());
+    user.setLastName(registerRequest.getLastName());
     user.setAge(registerRequest.getAge());
     user.setGender(registerRequest.getGender());
     user.setCountry(registerRequest.getCountry());
     user.setEmail(registerRequest.getEmail());
     user.setPhoneNumber(registerRequest.getPhoneNumber());
     user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-    user.setEmegencyContact1(registerRequest.getEmegencyContact1());
+    user.setEmergencyContact1(registerRequest.getEmergencyContact1());
     user.setEmergencyContact2(registerRequest.getEmergencyContact2());
     user.setDoctorContact1(registerRequest.getDoctorContact1());
     user.setDoctorContact2(registerRequest.getDoctorContact2());
-    System.out.println("username : "+registerRequest.getUsername()+" Password: "+registerRequest.getPassword());
+    System.out.println("username : "+registerRequest.getUserName()+" Password: "+registerRequest.getPassword());
     Role roles = roleRepository.findByRoleName("ROLE_ADMIN").get();
     user.setRoles(Collections.singleton(roles));
 
@@ -106,8 +106,8 @@ public class LoginController {
     //end points for forgotpassword
     @PostMapping(value = "/user/forgotpassword",produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> handleForgotPassword(@RequestParam("userName") String userName,@RequestParam("newPassword") String newPassword) {
-        Optional<User> user=userRepository.findByUsername(userName);
-            if (!userRepository.existsByusername(userName)) {
+        Optional<User> user=userRepository.findByUserName(userName);
+            if (!userRepository.existsByuserName(userName)) {
             return ResponseEntity.badRequest().body("User not found");
         }
        // User user = userRepository.findByUsername(username);

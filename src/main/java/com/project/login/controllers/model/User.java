@@ -6,20 +6,20 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "userName")})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    String firstname;
-    String lastname;
+    String firstName;
+    String lastName;
     String email;
     int age;
     String gender;
-    String username;
+    String userName;
     String phoneNumber;
     String country;
-    String emegencyContact1;
+    String emergencyContact1;
     String emergencyContact2;
     String doctorContact1;
     String doctorContact2;
