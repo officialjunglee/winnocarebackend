@@ -13,9 +13,9 @@ public class MedicineDetailRequest {
              String userName;
              String medicineName;
              int stock;
-             String expiryDate;
-             String medStartDate;
-             String medEndDate;
+             LocalDate expiryDate;
+             LocalDate medStartDate;
+             LocalDate medEndDate;
              String reminderTime;
              List<String> frequency;
              List<String> timeOfDay;

@@ -3,9 +3,11 @@ package com.project.login.controllers.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Type;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.sql.Time;
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,13 +29,13 @@ public class MedicineDetails {
             private Integer stock;
 
             @Column(name = "expiry_date")
-            private String expiryDate;
+            private LocalDate expiryDate;
 
             @Column(name = "med_start_date")
-            private String medStartDate;
+            private LocalDate medStartDate;
 
             @Column(name = "med_end_date")
-            private String medEndDate;
+            private LocalDate medEndDate;
 
             @Column(name = "reminder_time")
             private String reminderTime;
