@@ -5,6 +5,7 @@ import com.project.login.controllers.model.User;
 import com.project.login.controllers.request.LoginRequest;
 import com.project.login.controllers.request.RegisterRequest;
 import com.project.login.controllers.response.LoginResponse;
+import com.project.login.controllers.response.RegisterResponse;
 import com.project.login.repository.RoleRepository;
 import com.project.login.repository.UserRepository;
 import com.project.login.service.UserService;
@@ -72,11 +73,14 @@ public class LoginController {
       return loginResponse;
     }
 @PostMapping(value = "/user/register",produces = "application/json", consumes = "application/json")
-    public ResponseEntity<?> registerResponse(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<RegisterResponse> registerResponse(@RequestBody RegisterRequest registerRequest){
         log.info("Register api");
     // add check if username exists in Database
+    RegisterResponse registerResponse=new RegisterResponse();
     if(userRepository.existsByuserName(registerRequest.getUserName())){
-        return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        registerResponse.setResponseCode("FAILURE");
+        registerResponse.setMessage("Username is already taken!");
+        return ResponseEntity.badRequest().body(registerResponse);
     }
 
     // create object of the user
@@ -100,8 +104,14 @@ public class LoginController {
     user.setRoles(Collections.singleton(roles));
 
     userRepository.save(user);
-
-    return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+    registerResponse.setMessage("User registered successfully");
+    registerResponse.setResponseCode("SUCCESS");
+    registerResponse.setUserName(registerRequest.getUserName());
+    registerResponse.setEmergencyContact1(registerRequest.getEmergencyContact1());
+    registerResponse.setEmergencyContact2(registerRequest.getEmergencyContact2());
+    registerResponse.setDoctorContact1(registerRequest.getDoctorContact1());
+    registerResponse.setDoctorContact2(registerRequest.getDoctorContact2());
+    return ResponseEntity.ok(registerResponse);
     }
     //end points for forgotpassword
     @PostMapping(value = "/user/forgotpassword",produces = "application/json", consumes = "application/json")
