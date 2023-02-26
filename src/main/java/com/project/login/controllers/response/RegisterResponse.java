@@ -8,11 +8,4 @@ import lombok.Data;
 public class RegisterResponse {
     private String responseCode;
     private String message;
-
-    private String userName;
-
-    private String emergencyContact1;
-    private String emergencyContact2;
-    private String doctorContact1;
-    private String doctorContact2;
 }

@@ -104,13 +104,8 @@ public class LoginController {
     user.setRoles(Collections.singleton(roles));
 
     userRepository.save(user);
-    registerResponse.setMessage("User registered successfully");
+    registerResponse.setMessage(registerRequest.getUserName()+" registered successfully");
     registerResponse.setResponseCode("SUCCESS");
-    registerResponse.setUserName(registerRequest.getUserName());
-    registerResponse.setEmergencyContact1(registerRequest.getEmergencyContact1());
-    registerResponse.setEmergencyContact2(registerRequest.getEmergencyContact2());
-    registerResponse.setDoctorContact1(registerRequest.getDoctorContact1());
-    registerResponse.setDoctorContact2(registerRequest.getDoctorContact2());
     return ResponseEntity.ok(registerResponse);
     }
     //end points for forgotpassword
