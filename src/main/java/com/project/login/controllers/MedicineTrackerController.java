@@ -21,6 +21,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin("https://https://winnocareapp.azurewebsites.net/")
 public class MedicineTrackerController {
     @Autowired
     private MedicineDetailsRepository medicineDetailsRepository;

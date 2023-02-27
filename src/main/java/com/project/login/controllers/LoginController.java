@@ -31,6 +31,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin("https://https://winnocareapp.azurewebsites.net/")
 public class LoginController {
 
     @Autowired
