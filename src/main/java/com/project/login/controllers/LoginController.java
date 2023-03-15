@@ -100,6 +100,7 @@ public class LoginController {
     user.setEmergencyContact2(registerRequest.getEmergencyContact2());
     user.setDoctorContact1(registerRequest.getDoctorContact1());
     user.setDoctorContact2(registerRequest.getDoctorContact2());
+    user.setDefaultFlag("E1");
     System.out.println("username : "+registerRequest.getUserName()+" Password: "+registerRequest.getPassword());
     Role roles = roleRepository.findByRoleName("ROLE_ADMIN").get();
     user.setRoles(Collections.singleton(roles));

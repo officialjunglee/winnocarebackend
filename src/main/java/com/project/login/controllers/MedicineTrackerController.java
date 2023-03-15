@@ -1,9 +1,13 @@
 package com.project.login.controllers;
 
+import com.project.login.controllers.model.User;
 import com.project.login.controllers.request.Body;
 import com.project.login.controllers.request.MedicineScheduleRequest;
+import com.project.login.controllers.response.EmergencyContactResponse;
 import com.project.login.controllers.response.MedicineScheduleResponse;
+import com.project.login.controllers.response.RegisterResponse;
 import com.project.login.repository.MedicineDetailsRepository;
+import com.project.login.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -25,6 +30,9 @@ import java.util.List;
 public class MedicineTrackerController {
     @Autowired
     private MedicineDetailsRepository medicineDetailsRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
 @PostMapping(value = "/user/medicinedetails",produces = "application/json", consumes = "application/json")
@@ -87,11 +95,11 @@ public class MedicineTrackerController {
                 }
             }
             body.setStatusCode("SUCCESS");
-            body.setMessage("Frequency Fetched successfully");
+            body.setMessage("Medicine details fetched successfully");
             body.setMedicineScheduleResponse(medicineScheduleResponse);
         }
         else {
-            body.setMessage("Medicine Schedule Not Found");
+            body.setMessage("Medicine details Not Found");
             body.setStatusCode("FAILURE");
             body.setMedicineScheduleResponse(medicineScheduleResponse);
         }
@@ -103,5 +111,29 @@ public class MedicineTrackerController {
         return new MedicineScheduleResponse(medicine.getUserName(), medicine.getMedicineName(), medicine.getStock(),
                 medicine.getExpiryDate(), medicine.getMedStartDate(), medicine.getMedEndDate(), medicine.getReminderTime(),
                 medicine.getFrequency(), medicine.getTimeOfDay());
+    }
+
+    @PostMapping(value = "/emergency/contact",produces = "application/json", consumes = "application/json")
+    public ResponseEntity<EmergencyContactResponse> emergencyRespone(@RequestParam("userName") String userName){
+        EmergencyContactResponse emergencyContactResponse=new EmergencyContactResponse();
+        Optional<User> user=userRepository.findByUserName(userName);
+        if (!userRepository.existsByuserName(userName)) {
+            emergencyContactResponse.setResponseCode("FAILURE");
+            emergencyContactResponse.setMessage("User not found");
+            return ResponseEntity.badRequest().body(emergencyContactResponse);
+        }
+        String flag=user.get().getDefaultFlag();
+        System.out.println("flag value:"+flag);
+        String defaultContact;
+        if(flag.equalsIgnoreCase("E1")){
+            defaultContact=user.get().getEmergencyContact1();
+        }
+        else {
+            defaultContact=user.get().getEmergencyContact2();
+        }
+        emergencyContactResponse.setResponseCode("SUCCESS");
+        emergencyContactResponse.setMessage("Emergency Contact Found");
+        emergencyContactResponse.setDefultContact(defaultContact);
+    return ResponseEntity.ok(emergencyContactResponse);
     }
 }

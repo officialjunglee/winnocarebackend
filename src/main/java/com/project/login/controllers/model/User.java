@@ -20,6 +20,7 @@ public class User {
     String phoneNumber;
     String country;
     String emergencyContact1;
+    String defaultFlag;
     String emergencyContact2;
     String doctorContact1;
     String doctorContact2;

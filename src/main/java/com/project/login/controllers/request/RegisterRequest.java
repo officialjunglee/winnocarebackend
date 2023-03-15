@@ -18,4 +18,6 @@ public class RegisterRequest {
     String emergencyContact2;
     String doctorContact1;
     String doctorContact2;
+
+    String defaultFlag;
 }
