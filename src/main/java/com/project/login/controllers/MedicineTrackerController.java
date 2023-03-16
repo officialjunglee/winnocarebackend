@@ -193,7 +193,7 @@ public class MedicineTrackerController {
         user1.setDefaultFlag(flagValue);
         userRepository.save(user1);
         emergencyContactResponse.setResponseCode("SUCCESS");
-        emergencyContactResponse.setMessage("Default Status Updated");
+        emergencyContactResponse.setMessage("Default Contact Status Updated");
         return ResponseEntity.ok(emergencyContactResponse);
     }
 }
