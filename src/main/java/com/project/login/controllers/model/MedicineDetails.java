@@ -39,6 +39,8 @@ public class MedicineDetails {
 
             @Column(name = "reminder_time")
             private String reminderTime;
+            @Column(name="active_status")
+            private int activeStatus;
 
             @ElementCollection
             @CollectionTable(name = "medicine_details_frequency", joinColumns = @JoinColumn(name = "medication_id"))

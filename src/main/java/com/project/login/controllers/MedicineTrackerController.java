@@ -50,11 +50,31 @@ public class MedicineTrackerController {
         medicineDetails.setStock(medicineDetailRequest.getStock());
         medicineDetails.setTimeOfDay(medicineDetailRequest.getTimeOfDay());
         medicineDetails.setReminderTime(medicineDetailRequest.getReminderTime());
+        medicineDetails.setActiveStatus(1);
 
         System.out.println("medine details: "+medicineDetails);
         medicineDetailsRepository.save(medicineDetails);
 
     return new ResponseEntity<>("User Medication details saved successfully", HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/medicine/update",produces = "application/json", consumes = "application/json")
+    public ResponseEntity<?> updateMedicine(@RequestBody MedicineDetailRequest medicineDetailRequest){
+        MedicineDetails medicineDetails= medicineDetailsRepository.findByUserNameAndMedicineName(medicineDetailRequest.getUserName()
+        ,medicineDetailRequest.getMedicineName());
+        if(medicineDetails==null){
+            return ResponseEntity.badRequest().body("Details Not found");
+        }
+        medicineDetails.setFrequency(medicineDetailRequest.getFrequency());
+        medicineDetails.setExpiryDate(medicineDetailRequest.getExpiryDate());
+        medicineDetails.setMedStartDate(medicineDetailRequest.getMedStartDate());
+        medicineDetails.setMedEndDate(medicineDetailRequest.getMedEndDate());
+        medicineDetails.setStock(medicineDetailRequest.getStock());
+        medicineDetails.setTimeOfDay(medicineDetailRequest.getTimeOfDay());
+        medicineDetails.setReminderTime(medicineDetailRequest.getReminderTime());
+        medicineDetailsRepository.save(medicineDetails);
+
+        return new ResponseEntity<>("User Medication details saved successfully", HttpStatus.OK);
     }
     @PostMapping(value = "/user/medicinefrequency",produces = "application/json", consumes = "application/json")
     public Body medicineFrequency(@RequestBody MedicineScheduleRequest medicineScheduleRequest,
@@ -81,6 +101,7 @@ public class MedicineTrackerController {
         }
         return body;
     }
+
     @PostMapping(value = "/user/medicineschedule",produces = "application/json",consumes = "application/json")
     public Body medicineSchedule(@RequestParam String userName){
         LocalDate localDate=LocalDate.now();
@@ -90,7 +111,8 @@ public class MedicineTrackerController {
         List<MedicineScheduleResponse> medicineScheduleResponse=new ArrayList<>();
         if(!medicineDetails.isEmpty()){
             for (MedicineDetails medicine:medicineDetails){
-                if(medicine.getMedStartDate().isBefore(localDate)&&medicine.getMedEndDate().isAfter(localDate)){
+                if(medicine.getMedStartDate().isBefore(localDate)&&medicine.getMedEndDate().isAfter(localDate)
+                &&medicine.getActiveStatus()==1){
                     medicineScheduleResponse.add(mapToResponse(medicine));
                 }
             }
@@ -113,7 +135,19 @@ public class MedicineTrackerController {
                 medicine.getFrequency(), medicine.getTimeOfDay());
     }
 
-    @PostMapping(value = "/emergency/contact",produces = "application/json", consumes = "application/json")
+    @PostMapping(value = "/medicine/delete",produces = "application/json", consumes = "application/json")
+    public ResponseEntity<?> softDeleteMedicineDetails(@RequestParam String userName, @RequestParam String medicineName){
+        MedicineDetails medicineDetails=medicineDetailsRepository.findByUserNameAndMedicineName(userName,medicineName);
+        if(medicineDetails==null){
+            return ResponseEntity.badRequest().body("No medicine Details found!");
+        }
+        if(medicineDetails.getActiveStatus()!=0){
+            medicineDetails.setActiveStatus(0);
+        }
+        medicineDetailsRepository.save(medicineDetails);
+        return ResponseEntity.ok("Operation Successful");
+    }
+    @GetMapping(value = "/emergency/contact",produces = "application/json", consumes = "application/json")
     public ResponseEntity<EmergencyContactResponse> emergencyRespone(@RequestParam("userName") String userName){
         EmergencyContactResponse emergencyContactResponse=new EmergencyContactResponse();
         Optional<User> user=userRepository.findByUserName(userName);
@@ -127,13 +161,39 @@ public class MedicineTrackerController {
         String defaultContact;
         if(flag.equalsIgnoreCase("E1")){
             defaultContact=user.get().getEmergencyContact1();
+            emergencyContactResponse.setSecondaryContact(user.get().getEmergencyContact2());
         }
         else {
             defaultContact=user.get().getEmergencyContact2();
+            emergencyContactResponse.setSecondaryContact(user.get().getEmergencyContact1());
         }
         emergencyContactResponse.setResponseCode("SUCCESS");
         emergencyContactResponse.setMessage("Emergency Contact Found");
         emergencyContactResponse.setDefultContact(defaultContact);
+        emergencyContactResponse.setPrimaryDoctorContact(user.get().getDoctorContact1());
+        emergencyContactResponse.setSecondaryDoctorContact(user.get().getDoctorContact2());
     return ResponseEntity.ok(emergencyContactResponse);
+    }
+
+    @PostMapping(value = "/update/defaultcontact",produces = "application/json", consumes = "application/json")
+    public ResponseEntity<?> defaultFlagUpdate(@RequestParam("userName") String userName,
+                                                                     @RequestParam("defaultContact") String defaultContact){
+        EmergencyContactResponse emergencyContactResponse=new EmergencyContactResponse();
+        Optional<User> user=userRepository.findByUserName(userName);
+        if (!userRepository.existsByuserName(userName)) {
+            emergencyContactResponse.setResponseCode("FAILURE");
+            emergencyContactResponse.setMessage("User not found");
+            return ResponseEntity.badRequest().body(emergencyContactResponse);
+        }
+        String flagValue="E1";
+        if (defaultContact.equalsIgnoreCase("emergencyContact2")){
+            flagValue="E2";
+        }
+        User user1=user.orElseThrow();
+        user1.setDefaultFlag(flagValue);
+        userRepository.save(user1);
+        emergencyContactResponse.setResponseCode("SUCCESS");
+        emergencyContactResponse.setMessage("Default Status Updated");
+        return ResponseEntity.ok(emergencyContactResponse);
     }
 }

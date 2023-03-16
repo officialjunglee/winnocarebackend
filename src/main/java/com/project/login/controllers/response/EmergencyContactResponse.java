@@ -10,4 +10,8 @@ public class EmergencyContactResponse {
     private String message;
     private String defultContact;
 
+    private String secondaryContact;
+    private String primaryDoctorContact;
+    private String secondaryDoctorContact;
+
 }
