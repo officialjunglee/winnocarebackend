@@ -158,20 +158,18 @@ public class MedicineTrackerController {
         }
         String flag=user.get().getDefaultFlag();
         System.out.println("flag value:"+flag);
-        String defaultContact;
-        if(flag.equalsIgnoreCase("E1")){
-            defaultContact=user.get().getEmergencyContact1();
-            emergencyContactResponse.setSecondaryContact(user.get().getEmergencyContact2());
+        String defaultContact="";
+        if(flag!=null&&flag.equalsIgnoreCase("E1")){
+            defaultContact="emergencyContact1";
         }
-        else {
-            defaultContact=user.get().getEmergencyContact2();
-            emergencyContactResponse.setSecondaryContact(user.get().getEmergencyContact1());
+        else if(flag!=null&&flag.equalsIgnoreCase("E2")){
+            defaultContact="emergencyContact2";
         }
         emergencyContactResponse.setResponseCode("SUCCESS");
         emergencyContactResponse.setMessage("Emergency Contact Found");
         emergencyContactResponse.setDefultContact(defaultContact);
-        emergencyContactResponse.setPrimaryDoctorContact(user.get().getDoctorContact1());
-        emergencyContactResponse.setSecondaryDoctorContact(user.get().getDoctorContact2());
+        emergencyContactResponse.setEmergencyContact1(user.get().getEmergencyContact1());
+        emergencyContactResponse.setEmergencyContact2(user.get().getEmergencyContact2());
     return ResponseEntity.ok(emergencyContactResponse);
     }
 
