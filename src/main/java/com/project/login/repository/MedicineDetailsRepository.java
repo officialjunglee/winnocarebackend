@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface MedicineDetailsRepository extends JpaRepository<MedicineDetails,Long> {
 
-    MedicineDetails findByUserNameAndMedicineName(String userName, String medicineName);
-    Boolean existsByUserNameAndMedicineName(String userName, String medicineName);
-    List<MedicineDetails> findByUserNameAndExpiryDateAfter(String userName, LocalDate expiryDate);
+    MedicineDetails findByUserNameAndMedicineNameAndActiveStatus(String userName, String medicineName,int activeStatus);
+    Boolean existsByUserNameAndMedicineNameAndActiveStatus(String userName, String medicineName,int activeStatus);
+    List<MedicineDetails> findByUserNameAndExpiryDateAfterAndActiveStatus(String userName, LocalDate expiryDate, int activeStatus);
+    List<MedicineDetails> findByUserNameAndExpiryDateBefore(String userName, LocalDate expiryDate);
 
 }

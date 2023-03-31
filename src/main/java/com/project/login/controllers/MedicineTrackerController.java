@@ -41,7 +41,7 @@ public class MedicineTrackerController {
         log.info("Medicine Details api");
         String userName=medicineDetailRequest.getUserName();
         String medicineName=medicineDetailRequest.getMedicineName().trim().toLowerCase();
-        if(medicineDetailsRepository.existsByUserNameAndMedicineName(userName,medicineName)){
+        if(medicineDetailsRepository.existsByUserNameAndMedicineNameAndActiveStatus(userName,medicineName,1)){
         return ResponseEntity.badRequest().body("Medicine Name already present");
         }
         // create Medicine details object
@@ -70,8 +70,8 @@ public class MedicineTrackerController {
 
     @PostMapping(value = "/medicine/update",produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> updateMedicine(@RequestBody MedicineDetailRequest medicineDetailRequest){
-        MedicineDetails medicineDetails= medicineDetailsRepository.findByUserNameAndMedicineName(medicineDetailRequest.getUserName()
-        ,medicineDetailRequest.getMedicineName());
+        MedicineDetails medicineDetails= medicineDetailsRepository.findByUserNameAndMedicineNameAndActiveStatus(medicineDetailRequest.getUserName()
+        ,medicineDetailRequest.getMedicineName().toLowerCase(),1);
         if(medicineDetails==null){
             return ResponseEntity.badRequest().body("Details Not found");
         }
@@ -91,8 +91,8 @@ public class MedicineTrackerController {
                                                      HttpServletResponse httpServletResponse){
         MedicineScheduleResponse medicineScheduleResponse=new MedicineScheduleResponse();
         Body body=new Body();
-        MedicineDetails medicineDetails=medicineDetailsRepository.findByUserNameAndMedicineName(medicineScheduleRequest.getUserName(),
-                medicineScheduleRequest.getMedicineName());
+        MedicineDetails medicineDetails=medicineDetailsRepository.findByUserNameAndMedicineNameAndActiveStatus(medicineScheduleRequest.getUserName(),
+                medicineScheduleRequest.getMedicineName().trim().toLowerCase(),1);
         System.out.println("Medication: "+medicineDetails);
 
         if(medicineDetails==null){
@@ -116,7 +116,7 @@ public class MedicineTrackerController {
     public Body medicineSchedule(@RequestParam String userName){
         LocalDate localDate=LocalDate.now();
         Body body=new Body();
-        List<MedicineDetails> medicineDetails=medicineDetailsRepository.findByUserNameAndExpiryDateAfter(userName,localDate);
+        List<MedicineDetails> medicineDetails=medicineDetailsRepository.findByUserNameAndExpiryDateAfterAndActiveStatus(userName,localDate,1);
         System.out.println("Medicine Details: "+medicineDetails);
         List<MedicineScheduleResponse> medicineScheduleResponse=new ArrayList<>();
         if(!medicineDetails.isEmpty()){
@@ -148,7 +148,7 @@ public class MedicineTrackerController {
 
     @PostMapping(value = "/medicine/delete",produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> softDeleteMedicineDetails(@RequestParam String userName, @RequestParam String medicineName){
-        MedicineDetails medicineDetails=medicineDetailsRepository.findByUserNameAndMedicineName(userName,medicineName);
+        MedicineDetails medicineDetails=medicineDetailsRepository.findByUserNameAndMedicineNameAndActiveStatus(userName,medicineName.trim().toLowerCase(),1);
         if(medicineDetails==null){
             return ResponseEntity.badRequest().body("No medicine Details found!");
         }
