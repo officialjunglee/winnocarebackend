@@ -19,4 +19,9 @@ public class MedicineDetailRequest {
              String reminderTime;
              List<String> frequency;
              List<String> timeOfDay;
+             String morning;
+             String evening;
+             String afternoon;
+             String night;
+
 }

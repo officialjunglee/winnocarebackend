@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +39,15 @@ public class MedicineTrackerController {
 @PostMapping(value = "/user/medicinedetails",produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> registerResponse(@RequestBody MedicineDetailRequest medicineDetailRequest){
         log.info("Medicine Details api");
-
+        String userName=medicineDetailRequest.getUserName();
+        String medicineName=medicineDetailRequest.getMedicineName().trim().toLowerCase();
+        if(medicineDetailsRepository.existsByUserNameAndMedicineName(userName,medicineName)){
+        return ResponseEntity.badRequest().body("Medicine Name already present");
+        }
         // create Medicine details object
         MedicineDetails medicineDetails=new MedicineDetails();
         medicineDetails.setUserName(medicineDetailRequest.getUserName());
-        medicineDetails.setMedicineName(medicineDetailRequest.getMedicineName());
+        medicineDetails.setMedicineName(medicineName);
         medicineDetails.setFrequency(medicineDetailRequest.getFrequency());
         medicineDetails.setExpiryDate(medicineDetailRequest.getExpiryDate());
         medicineDetails.setMedStartDate(medicineDetailRequest.getMedStartDate());
@@ -50,6 +55,11 @@ public class MedicineTrackerController {
         medicineDetails.setStock(medicineDetailRequest.getStock());
         medicineDetails.setTimeOfDay(medicineDetailRequest.getTimeOfDay());
         medicineDetails.setReminderTime(medicineDetailRequest.getReminderTime());
+
+        medicineDetails.setAfternoon(medicineDetailRequest.getAfternoon());
+        medicineDetails.setMorning(medicineDetailRequest.getMorning());
+        medicineDetails.setEvening(medicineDetailRequest.getEvening());
+        medicineDetails.setNight(medicineDetailRequest.getNight());
         medicineDetails.setActiveStatus(1);
 
         System.out.println("medine details: "+medicineDetails);
@@ -111,7 +121,8 @@ public class MedicineTrackerController {
         List<MedicineScheduleResponse> medicineScheduleResponse=new ArrayList<>();
         if(!medicineDetails.isEmpty()){
             for (MedicineDetails medicine:medicineDetails){
-                if(medicine.getMedStartDate().isBefore(localDate)&&medicine.getMedEndDate().isAfter(localDate)
+                if((medicine.getMedStartDate().isBefore(localDate)||medicine.getMedStartDate().isEqual(localDate))
+                        &&medicine.getMedEndDate().isAfter(localDate)
                 &&medicine.getActiveStatus()==1){
                     medicineScheduleResponse.add(mapToResponse(medicine));
                 }
