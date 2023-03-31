@@ -39,6 +39,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
+        context: .
         push: true
         tags: kvjpluto/winnocare-backend-image:${{ github.sha }}
         build-args: |
