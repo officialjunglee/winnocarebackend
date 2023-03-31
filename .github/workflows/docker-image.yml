@@ -41,6 +41,8 @@ jobs:
       with:
         context: .
         push: true
-        tags: kvjpluto/winnocare-backend-image:${{ github.sha }}
+        tags: kvjpluto/winnocare-backend-image:${{ env.VERSION }}
         build-args: |
-          VERSION=${{ github.sha }}
+          VERSION=${{ env.VERSION }}
+    - name: Set version environment variable
+      run: echo ::set-env name=VERSION::$(date +%Y.%m.%d)-${{ github.sha }}
