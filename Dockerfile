@@ -1,3 +1,4 @@
+ARG VERSION
 FROM openjdk:17-jdk-alpine as build
 COPY . /usr/app
 WORKDIR /usr/app

@@ -40,4 +40,6 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         push: true
-        tags: kvjpluto/winnocare-backend-image:latest
+        tags: kvjpluto/winnocare-backend-image:${{ github.sha }}
+        build-args: |
+          VERSION=${{ github.sha }}
