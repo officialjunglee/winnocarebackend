@@ -25,9 +25,15 @@ public class MedicineScheduleResponse {
     private List<String> frequency;
     private List<String> timeOfDay;
 
+    private String morning;
+    private String afternoon;
+    private String evening;
+    private String night;
+
     public MedicineScheduleResponse(String userName, String medicineName, Integer stock, LocalDate expiryDate,
                                     LocalDate medStartDate, LocalDate medEndDate,
-                                    String reminderTime, List<String> frequency, List<String> timeOfDay) {
+                                    String reminderTime, List<String> frequency, List<String> timeOfDay, String morning,
+                                    String afternoon, String evening, String night) {
         this.userName=userName;
         this.medicineName=medicineName;
         this.stock=stock;
@@ -37,6 +43,10 @@ public class MedicineScheduleResponse {
         this.reminderTime=reminderTime;
         this.frequency=frequency;
         this.timeOfDay=timeOfDay;
+        this.morning=morning;
+        this.afternoon=afternoon;
+        this.evening=evening;
+        this.night=night;
     }
 
     public MedicineScheduleResponse() {

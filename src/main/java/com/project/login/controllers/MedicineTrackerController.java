@@ -82,6 +82,12 @@ public class MedicineTrackerController {
         medicineDetails.setStock(medicineDetailRequest.getStock());
         medicineDetails.setTimeOfDay(medicineDetailRequest.getTimeOfDay());
         medicineDetails.setReminderTime(medicineDetailRequest.getReminderTime());
+
+        medicineDetails.setAfternoon(medicineDetailRequest.getAfternoon());
+        medicineDetails.setMorning(medicineDetailRequest.getMorning());
+        medicineDetails.setEvening(medicineDetailRequest.getEvening());
+        medicineDetails.setNight(medicineDetailRequest.getNight());
+
         medicineDetailsRepository.save(medicineDetails);
 
         return new ResponseEntity<>("User Medication details saved successfully", HttpStatus.OK);
@@ -143,7 +149,8 @@ public class MedicineTrackerController {
         // map fields from Medicine entity to MedicineResponse object
         return new MedicineScheduleResponse(medicine.getUserName(), medicine.getMedicineName(), medicine.getStock(),
                 medicine.getExpiryDate(), medicine.getMedStartDate(), medicine.getMedEndDate(), medicine.getReminderTime(),
-                medicine.getFrequency(), medicine.getTimeOfDay());
+                medicine.getFrequency(), medicine.getTimeOfDay(), medicine.getMorning(), medicine.getAfternoon(),
+                medicine.getEvening(), medicine.getNight());
     }
 
     @PostMapping(value = "/medicine/delete",produces = "application/json", consumes = "application/json")
