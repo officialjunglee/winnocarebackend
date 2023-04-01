@@ -46,9 +46,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: kvjpluto/winnocare-backend-image:${{ github.sha }}
-          build-args: |
-            VERSION=${{ github.sha }}
+          tags: kvjpluto/winnocare-backend-image:latest
+
 #
 #      - name: Set up Docker Buildx
 #        uses: docker/setup-buildx-action@v1
